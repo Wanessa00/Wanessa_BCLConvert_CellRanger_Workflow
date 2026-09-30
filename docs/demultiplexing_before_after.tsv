@@ -1,0 +1,6 @@
+sample	original_reads	original_percent_run	rescue_reads	rescue_percent_run	rescue_perfect_match_percent	rescue_one_mismatch_percent
+P11	5661105	0.40	232025531	16.24	41.26	58.74
+DMem	16888206	1.18	309803906	21.68	23.63	76.37
+P11_O	16851455	1.18	313022691	21.90	98.09	1.91
+O	26612015	1.86	490138085	34.30	98.16	1.84
+Undetermined	1363114160	95.38	84136728	5.89	100.00	0.00

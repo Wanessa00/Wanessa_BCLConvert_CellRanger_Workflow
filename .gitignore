@@ -1,0 +1,47 @@
+# Raw sequencing data
+*.fastq
+*.fastq.gz
+*.fq
+*.fq.gz
+*.bcl
+*.cbcl
+
+# Alignment files
+*.bam
+*.bai
+*.cram
+*.crai
+
+# Cell Ranger / references / binaries
+cellranger-*/
+refdata-*/
+*.tar.gz
+*.tar.xz
+
+# Cell Ranger output directories
+CellRanger_Wanessa/
+*/SC_RNA_COUNTER_CS/
+*/_invocation
+*/_jobmode
+*/_mrosource
+*/_sitecheck
+*/_tags
+*/_timestamp
+*/_uuid
+
+# BaseSpace downloads / authentication
+.bs/
+.basespace/
+*token*
+*credentials*
+
+# Large manifests and temporary files
+*.tmp
+*.part
+*.log
+
+# OS/editor
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
