@@ -459,7 +459,7 @@ https://www.10xgenomics.com/support/software/cell-ranger/downloads/cr-system-req
 https://www.10xgenomics.com/support/software/cell-ranger/9.0/release-notes/cr-reference-release-notes
 
 
-## 18. Initialize the Git repository
+## 19. Initialize the Git repository
 
 After copying this repository folder to the desired location:
 
