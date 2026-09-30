@@ -1,6 +1,6 @@
 # Recovery of a 10x Genomics 3' Gene Expression run and Cell Ranger processing
 
-This repository documents the workflow used to recover a NextSeq 2000 / 10x Genomics 3' Gene Expression run with severe demultiplexing failure, preserve the original data, requeue BCL Convert with a modified Index 1 strategy, download the recovered FASTQs from BaseSpace Sequence Hub, and prepare/run Cell Ranger.
+This repository documents the workflow used to recover a NextSeq 2000 / 10x Genomics 3' Gene Expression run with severe demultiplexing failure, requeue BCL Convert with a modified Index 1 strategy, download the recovered FASTQs from BaseSpace Sequence Hub, and prepare/run Cell Ranger.
 
 ## 1. Dataset and sequencing configuration
 
@@ -459,7 +459,7 @@ https://www.10xgenomics.com/support/software/cell-ranger/downloads/cr-system-req
 https://www.10xgenomics.com/support/software/cell-ranger/9.0/release-notes/cr-reference-release-notes
 
 
-## 19. Initialize the Git repository
+## 18. Initialize the Git repository
 
 After copying this repository folder to the desired location:
 
