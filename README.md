@@ -235,7 +235,7 @@ Example:
 
 ```powershell
 bs.exe download project `
-  -i 519115698 `
+  -i <ORIGINAL_BASESPACE_PROJECT_ID> `
   -o "E:\BaseSpace\Wanessa\01_original_backup" `
   --extension fastq.gz
 ```
@@ -246,7 +246,7 @@ The rescued project was downloaded with:
 
 ```powershell
 bs.exe download project `
-  -i  0000000`
+  -i  <ORIGINAL_BASESPACE_PROJECT_ID>`
   -o "...\02_rescue_I1_7bp" `
   --extension fastq.gz
 ```
