@@ -1,8 +1,6 @@
 # Recovery of a 10x Genomics 3' Gene Expression run and Cell Ranger processing
 
-This repository documents the complete workflow used to recover a NextSeq 2000 / 10x Genomics 3' Gene Expression run with severe demultiplexing failure, preserve the original data, requeue BCL Convert with a modified Index 1 strategy, download the recovered FASTQs from BaseSpace Sequence Hub, and prepare/run Cell Ranger.
-
-The repository is intentionally detailed. The goal is to preserve the full computational audit trail, including the unsuccessful original demultiplexing, the diagnostic reasoning, the BaseSpace requeue configuration, the before/after demultiplexing metrics, and the final Cell Ranger commands.
+This repository documents the workflow used to recover a NextSeq 2000 / 10x Genomics 3' Gene Expression run with severe demultiplexing failure, preserve the original data, requeue BCL Convert with a modified Index 1 strategy, download the recovered FASTQs from BaseSpace Sequence Hub, and prepare/run Cell Ranger.
 
 ## 1. Dataset and sequencing configuration
 
@@ -47,8 +45,6 @@ CACTACGAAA -> CACTACGNAN
 GTGGATCAAA -> GTGGATCNAN
 GTAACATGCG -> GTAACATNCN
 ```
-
-This was consistent with the Illumina Technical Support recommendation to requeue demultiplexing while ignoring the final three cycles of Index 1.
 
 The original configuration was:
 
@@ -119,9 +115,7 @@ For the requeued cloud output, a separate project name was used:
 Wanessa_P11-4_rescue_I1_7bp
 ```
 
-The original analysis was retained in BaseSpace as a prior analysis. No original FASTQ was deleted or overwritten.
-
-The exact archival record of the final rescue Sample Sheet configuration is in:
+The archival record of the final rescue Sample Sheet configuration is in:
 
 ```text
 configs/SampleSheet_rescue_I1_7bp_record.csv
@@ -235,17 +229,7 @@ If the required project is in a specific workgroup, authentication must be perfo
 
 ## 8. Backing up the original data before requeue
 
-The original BaseSpace project was downloaded before modifying demultiplexing.
-
-Project IDs used in this analysis:
-
-```text
-Original FASTQ project: 519115698
-ICA workflow/project:    519276763
-Rescue FASTQ project:    520938419
-```
-
-For a GitHub/public workflow, these are retained only as an audit record. They are not universal identifiers.
+For a GitHub public workflow, these are retained only as an audit record. They are not universal identifiers.
 
 Example:
 
@@ -256,16 +240,14 @@ bs.exe download project `
   --extension fastq.gz
 ```
 
-Illumina's CLI downloader is resumable: rerunning the same download checks files already completed instead of downloading them again.
-
 ## 9. Downloading the rescue FASTQs
 
 The rescued project was downloaded with:
 
 ```powershell
 bs.exe download project `
-  -i 520938419 `
-  -o "E:\BaseSpace\Wanessa\02_rescue_I1_7bp" `
+  -i  0000000`
+  -o "...\02_rescue_I1_7bp" `
   --extension fastq.gz
 ```
 
@@ -296,39 +278,12 @@ bs download project -i <ProjectID> -o <output> --extension=fastq.gz
 Documentation:
 https://developer.basespace.illumina.com/docs/content/documentation/cli/cli-examples
 
-## 10. Folder names used for the local analysis
-
-To avoid spaces and to keep the recovered data distinct from the original demultiplexing, use:
-
-```text
-E:\BaseSpace\Wanessa\
-├── 01_original_backup\
-├── 02_rescue_I1_7bp\
-└── CellRanger_Wanessa\
-```
-
-In WSL the same paths are:
-
-```text
-/mnt/e/BaseSpace/Wanessa/01_original_backup
-/mnt/e/BaseSpace/Wanessa/02_rescue_I1_7bp
-/mnt/e/BaseSpace/Wanessa/CellRanger_Wanessa
-```
-
-If the data have already been downloaded under the old names, use `scripts/02_rename_existing_folders.ps1` and verify every path before moving large datasets.
-
-## 11. Cell Ranger version
+## 10. Cell Ranger version
 
 At the time this workflow was finalized, the current Cell Ranger release was:
 
 ```text
 Cell Ranger 10.1.0
-```
-
-The previous installation detected on the workstation was:
-
-```text
-/mnt/e/WSL/Linux-Ubuntu/cellranger-10.0.0/cellranger
 ```
 
 The updated installation is kept alongside the old one rather than deleting it.
@@ -353,7 +308,7 @@ The script installs it under:
 
 and adds it to `PATH` without deleting Cell Ranger 10.0.0.
 
-## 12. Reference genome
+## 11. Reference genome
 
 The correct Gene Expression reference used here is:
 
@@ -365,15 +320,7 @@ This is the **Gene Expression** reference, not `refdata-cellranger-arc-*`.
 
 The 2024-A human reference uses GRCh38 with GENCODE v44 / Ensembl 110 annotations.
 
-Do not substitute:
-
-```text
-refdata-cellranger-arc-GRCh38-2024-A
-```
-
-for a standard 3' Gene Expression `cellranger count`.
-
-## 13. Validate FASTQs before Cell Ranger
+## 12. Validate FASTQs before Cell Ranger
 
 From WSL:
 
@@ -392,7 +339,7 @@ The script checks:
 
 Because `gzip -t` reads the complete compressed files, this integrity check can take a long time on ~100 GB datasets.
 
-## 14. Cell Ranger working directory
+## 13. Cell Ranger working directory
 
 Create a dedicated output directory:
 
@@ -412,7 +359,7 @@ df -h /mnt/e
 
 10x currently lists 8 cores / 64 GB RAM as minimum system requirements for Cell Ranger, with substantially more recommended for larger datasets.
 
-## 15. Cell Ranger count
+## 14. Cell Ranger count
 
 The script runs samples sequentially to avoid competing for RAM and disk I/O:
 
@@ -447,7 +394,7 @@ The default workflow in this repository uses:
 --create-bam=false
 ```
 
-because disk space was a limiting factor and BAM files are not required for the planned downstream Seurat workflow. If a BAM is needed, change `CREATE_BAM=false` to `CREATE_BAM=true` before running.
+If a BAM is needed, change `CREATE_BAM=false` to `CREATE_BAM=true` before running.
 
 Example for P11:
 
@@ -479,20 +426,6 @@ outs/filtered_feature_bc_matrix.h5
 outs/raw_feature_bc_matrix.h5
 ```
 
-If BAM generation is enabled, also preserve the BAM and index.
-
-The first QC comparison should include:
-
-- estimated number of cells
-- mean reads per cell
-- median genes per cell
-- fraction reads in cells
-- valid barcodes
-- Q30 barcode/UMI/RNA read metrics
-- confidently mapped reads
-- sequencing saturation
-- median UMI counts per cell
-
 P11 and DMem deserve particular attention because the rescue demultiplexing retained a high fraction of one-mismatch index assignments.
 
 ## 17. GitHub safety
@@ -501,13 +434,6 @@ Do **not** push FASTQs, BAMs, Cell Ranger output matrices containing restricted 
 
 The `.gitignore` in this repository excludes the major large/sensitive file types.
 
-This repository should contain only:
-
-- scripts
-- configuration records
-- aggregate QC metrics
-- documentation
-- non-sensitive logs if appropriate
 
 ## 18. Official references
 
