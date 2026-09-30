@@ -3,7 +3,7 @@
 Download the original and rescued BaseSpace projects.
 
 Workflow implemented by:
-Wanessa Dayanne dos Santos
+Wanessa dos Santos
 
 BaseSpace project IDs are intentionally not stored in this public repository.
 They must be provided locally as environment variables before execution.
